@@ -121,8 +121,15 @@ class ProblemViewSet(viewsets.ModelViewSet):
         return ProblemSerializer
     
     def perform_create(self, serializer):
-        """Automatically assign the current user when creating a problem."""
-        serializer.save(user=self.request.user)
+        """
+        Automatically assign the current user when creating a problem.
+        Sets initial next_revision_date to today so problem appears in revisions immediately.
+        """
+        from django.utils import timezone
+        problem = serializer.save(
+            user=self.request.user,
+            next_revision_date=timezone.now().date()  # Set to today so it appears in revisions
+        )
     
     def perform_update(self, serializer):
         """Ensure user can only update their own problems."""

@@ -171,7 +171,13 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
 }
 
-# Judge0 API Configuration for Code Execution
+# Code Execution API Configuration
+CODE_EXECUTION_API = os.getenv('CODE_EXECUTION_API', 'piston')  # 'piston' or 'judge0'
+
+# Piston API Configuration (FREE - No API key required!)
+PISTON_API_URL = os.getenv('PISTON_API_URL', 'https://emkc.org/api/v2/piston')
+
+# Judge0 API Configuration (Requires RapidAPI subscription)
 JUDGE0_API_URL = os.getenv('JUDGE0_API_URL', 'https://judge0-ce.p.rapidapi.com')
-JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY', '')  # Get your key from RapidAPI
+JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY', '')
 JUDGE0_API_HOST = os.getenv('JUDGE0_API_HOST', 'judge0-ce.p.rapidapi.com')

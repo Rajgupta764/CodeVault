@@ -178,7 +178,51 @@ export default function Collections() {
                         </div>
                     ) : (
                         <div className="rounded-lg border border-slate-700 bg-slate-800/50 px-6 py-12 text-center">
-                            <p className="text-slate-400">No problems in this collection yet</p>
+                            <div className="max-w-md mx-auto">
+                                <svg
+                                    className="h-16 w-16 text-slate-600 mx-auto mb-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                </svg>
+                                <h3 className="text-xl font-semibold text-slate-300 mb-2">
+                                    No problems in this collection yet
+                                </h3>
+                                <p className="text-slate-400 text-sm mb-6">
+                                    To add problems to this collection:
+                                </p>
+                                <ol className="text-left text-sm text-slate-400 space-y-2 mb-6">
+                                    <li className="flex items-start gap-2">
+                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">1</span>
+                                        <span>Go to <strong className="text-slate-300">Dashboard</strong></span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">2</span>
+                                        <span>Click on any problem to view details</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">3</span>
+                                        <span>Use the <strong className="text-slate-300">"Add to Collection"</strong> dropdown at the top</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">4</span>
+                                        <span>Select this collection to add the problem</span>
+                                    </li>
+                                </ol>
+                                <button
+                                    onClick={() => navigate('/dashboard')}
+                                    className="rounded-lg bg-blue-600 hover:bg-blue-500 px-6 py-2.5 font-medium text-white transition"
+                                >
+                                    Go to Dashboard
+                                </button>
+                            </div>
                         </div>
                     )}
                 </main>
