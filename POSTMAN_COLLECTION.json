@@ -1,0 +1,343 @@
+{
+    "info": {
+        "name": "CodeVault API",
+        "description": "Complete API testing collection for CodeVault Django REST Framework project",
+        "version": "1.0.0"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "problem_id",
+            "value": "1",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Get Access Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\\n    \\\"username\\\": \\\"admin\\\",\\n    \\\"password\\\": \\\"your_password\\\"\\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/token/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "token",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\\n    \\\"refresh\\\": \\\"{{refresh_token}}\\\"\\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/token/refresh/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "token",
+                                "refresh",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Problems",
+            "item": [
+                {
+                    "name": "List All Problems",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Problem by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                "{{problem_id}}",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Problem",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\\n    \\\"title\\\": \\\"Two Sum\\\",\\n    \\\"description\\\": \\\"Given an array of integers nums and an integer target, return the indices of the two numbers that add up to target.\\\",\\n    \\\"difficulty\\\": \\\"EASY\\\",\\n    \\\"tags\\\": \\\"array,hash-table\\\"\\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Problem",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\\n    \\\"title\\\": \\\"Two Sum (Updated)\\\",\\n    \\\"description\\\": \\\"Updated description here\\\",\\n    \\\"difficulty\\\": \\\"MEDIUM\\\",\\n    \\\"tags\\\": \\\"array,hash-table,sorting\\\"\\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                "{{problem_id}}",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Problem",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                "{{problem_id}}",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Filter Problems by Difficulty",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/?difficulty=EASY",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "difficulty",
+                                    "value": "EASY"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Problems",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/?search=array",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "array"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Solutions",
+            "item": [
+                {
+                    "name": "List All Solutions",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/solutions/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "solutions",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get My Solutions",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/solutions/my_solutions/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "solutions",
+                                "my_solutions",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Submit Solution",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\\n    \\\"code\\\": \\\"def twoSum(nums, target):\\\\n    seen = {}\\\\n    for i, num in enumerate(nums):\\\\n        complement = target - num\\\\n        if complement in seen:\\\\n            return [seen[complement], i]\\\\n        seen[num] = i\\\",\\n    \\\"language\\\": \\\"python\\\"\\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}/submit_solution/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                "{{problem_id}}",
+                                "submit_solution",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Problem Solutions",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}/solutions/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "problems",
+                                "{{problem_id}}",
+                                "solutions",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
