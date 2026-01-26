@@ -1,0 +1,205 @@
+:root {
+    --indigo-50: rgba(99, 102, 241, 0.03);
+    --indigo-100: rgba(99, 102, 241, 0.1);
+    --indigo-200: rgba(99, 102, 241, 0.2);
+    --indigo-400: #818cf8;
+    --indigo-500: #6366f1;
+    --slate-400: #94a3b8;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-950: #020617;
+    --white: #ffffff;
+}
+
+.features-section {
+    width: 100%;
+    padding: 5rem 1rem;
+}
+
+.features-container {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.features-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: var(--indigo-100);
+    border: 1px solid var(--indigo-200);
+    color: var(--indigo-400);
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.features-title {
+    font-size: clamp(1.875rem, 2vw + 1rem, 3rem);
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    max-width: 56rem;
+}
+
+.features-subtitle {
+    font-size: clamp(1rem, 0.6vw + 0.9rem, 1.25rem);
+    color: var(--slate-400);
+    max-width: 48rem;
+    line-height: 1.7;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.feature-card {
+    position: relative;
+    width: 100%;
+    max-width: 24rem;
+    border-radius: 1rem;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 41, 59, 0.5);
+    padding: 1.75rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 20px 50px -20px rgba(99, 102, 241, 0.1);
+}
+
+.feature-card-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.feature-card:hover .feature-card-overlay {
+    opacity: 1;
+}
+
+.feature-card-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.feature-icon-wrapper {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--indigo-400);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-wrapper {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.feature-icon-inner {
+    display: inline-flex;
+}
+
+.feature-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.feature-card-title {
+    font-size: clamp(1.125rem, 0.6vw + 1rem, 1.25rem);
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+}
+
+.feature-card-text {
+    font-size: clamp(0.95rem, 0.4vw + 0.85rem, 1.05rem);
+    color: var(--slate-400);
+    line-height: 1.7;
+}
+
+@media (min-width: 640px) {
+    .features-section {
+        padding-top: 7rem;
+        padding-bottom: 7rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .features-header {
+        margin-bottom: 6rem;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature-card {
+        padding: 2rem;
+    }
+
+    .feature-icon-wrapper {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .feature-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .features-section {
+        padding-top: 8rem;
+        padding-bottom: 8rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .features-header {
+        margin-bottom: 8rem;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .features-section {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}

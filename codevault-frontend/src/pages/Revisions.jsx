@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRevisionsDue, markRevised } from '../utils/api'
+import './Revisions.css'
 
 export default function Revisions() {
     const navigate = useNavigate()
@@ -80,21 +81,21 @@ export default function Revisions() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100">
+        <div className="revisions-page">
             {/* Header */}
-            <header className="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-blue-400">Revisions Due</h1>
-                            <p className="text-sm text-slate-400 mt-1">
+            <header className="revisions-header">
+                <div className="revisions-header__container">
+                    <div className="revisions-header__content">
+                        <div className="revisions-header__title-section">
+                            <h1>Revisions Due</h1>
+                            <p>
                                 Problems scheduled for revision today
                             </p>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="revisions-header__actions">
                             <button
                                 onClick={() => navigate('/dashboard')}
-                                className="rounded-lg border border-slate-600 hover:bg-slate-700 px-4 py-2 font-medium text-slate-300 transition"
+                                className="revisions-header__back-btn"
                             >
                                 Back to Dashboard
                             </button>
@@ -103,7 +104,7 @@ export default function Revisions() {
                                     localStorage.removeItem('token')
                                     navigate('/')
                                 }}
-                                className="rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 font-medium text-white transition"
+                                className="revisions-header__logout-btn"
                             >
                                 Logout
                             </button>
@@ -113,28 +114,28 @@ export default function Revisions() {
             </header>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-8">
+            <main className="revisions-main">
                 {/* Error Message */}
                 {error && (
-                    <div className="mb-6 rounded-lg border border-red-500 bg-red-500/10 px-4 py-3 text-red-200">
+                    <div className="revisions-error">
                         {error}
                     </div>
                 )}
 
                 {/* Loading State */}
                 {loading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
-                            <p className="text-slate-400">Loading revisions...</p>
+                    <div className="revisions-loading">
+                        <div className="revisions-loading__content">
+                            <div className="revisions-loading__spinner"></div>
+                            <p className="revisions-loading__text">Loading revisions...</p>
                         </div>
                     </div>
                 ) : revisions.length === 0 ? (
                     /* No Revisions */
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <div className="rounded-full bg-slate-800 p-6 mb-4">
+                    <div className="revisions-empty">
+                        <div className="revisions-empty__icon-wrapper">
                             <svg
-                                className="h-16 w-16 text-slate-600"
+                                className="revisions-empty__icon"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -147,15 +148,15 @@ export default function Revisions() {
                                 />
                             </svg>
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-300 mb-2">
+                        <h2 className="revisions-empty__title">
                             No Revisions Due Today
                         </h2>
-                        <p className="text-slate-400 mb-6 text-center max-w-md">
+                        <p className="revisions-empty__description">
                             Great job! You're all caught up. Check back tomorrow or add new problems to your collection.
                         </p>
                         <button
                             onClick={() => navigate('/dashboard')}
-                            className="rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 font-semibold text-white transition"
+                            className="revisions-empty__button"
                         >
                             Go to Dashboard
                         </button>
@@ -163,36 +164,34 @@ export default function Revisions() {
                 ) : (
                     /* Revisions Grid */
                     <>
-                        <div className="mb-6">
-                            <p className="text-slate-300">
-                                <span className="text-2xl font-bold text-blue-400">{revisions.length}</span>{' '}
+                        <div className="revisions-count">
+                            <p>
+                                <span className="revisions-count__number">{revisions.length}</span>{' '}
                                 {revisions.length === 1 ? 'problem' : 'problems'} due for revision
                             </p>
                         </div>
 
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="revisions-grid">
                             {revisions.map((problem) => {
                                 const platformBadge = getPlatformBadge(problem.platform)
                                 return (
                                     <div
                                         key={problem.id}
-                                        className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 hover:border-slate-600 transition"
+                                        className="revision-card"
                                     >
                                         {/* Problem Header */}
-                                        <div className="mb-4">
-                                            <h3 className="text-lg font-semibold text-slate-100 mb-2 line-clamp-2">
+                                        <div className="revision-card__header">
+                                            <h3 className="revision-card__title">
                                                 {problem.problem_name}
                                             </h3>
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="revision-card__badges">
                                                 <span
-                                                    className={`px-2 py-1 rounded text-xs font-medium border ${getDifficultyClass(
-                                                        problem.difficulty
-                                                    )}`}
+                                                    className={`revision-card__badge revision-card__badge--${problem.difficulty.toLowerCase()}`}
                                                 >
                                                     {problem.difficulty}
                                                 </span>
                                                 <span
-                                                    className={`px-2 py-1 rounded text-xs font-medium ${platformBadge.color}`}
+                                                    className={`revision-card__badge revision-card__badge--${problem.platform.toLowerCase()}`}
                                                 >
                                                     {platformBadge.text}
                                                 </span>
@@ -200,22 +199,22 @@ export default function Revisions() {
                                         </div>
 
                                         {/* Revision Info */}
-                                        <div className="space-y-2 mb-4 text-sm">
-                                            <div className="flex justify-between text-slate-400">
+                                        <div className="revision-card__info">
+                                            <div className="revision-card__info-row">
                                                 <span>Last Solved:</span>
-                                                <span className="text-slate-300 font-medium">
+                                                <span className="revision-card__info-value">
                                                     {formatDate(problem.last_solved)}
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between text-slate-400">
+                                            <div className="revision-card__info-row">
                                                 <span>Revision Due:</span>
-                                                <span className="text-yellow-400 font-medium">
+                                                <span className="revision-card__info-value revision-card__info-value--due">
                                                     {formatDate(problem.next_revision_date)}
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between text-slate-400">
+                                            <div className="revision-card__info-row">
                                                 <span>Solved Count:</span>
-                                                <span className="text-blue-400 font-medium">
+                                                <span className="revision-card__info-value revision-card__info-value--count">
                                                     {problem.solved_count} times
                                                 </span>
                                             </div>
@@ -223,18 +222,18 @@ export default function Revisions() {
 
                                         {/* Tags */}
                                         {problem.tags && problem.tags.length > 0 && (
-                                            <div className="mb-4">
-                                                <div className="flex flex-wrap gap-1">
+                                            <div className="revision-card__tags">
+                                                <div className="revision-card__tags-list">
                                                     {problem.tags.slice(0, 3).map((tag, index) => (
                                                         <span
                                                             key={index}
-                                                            className="px-2 py-0.5 rounded-full bg-slate-700 text-slate-300 text-xs"
+                                                            className="revision-card__tag"
                                                         >
                                                             {tag}
                                                         </span>
                                                     ))}
                                                     {problem.tags.length > 3 && (
-                                                        <span className="px-2 py-0.5 rounded-full bg-slate-700 text-slate-400 text-xs">
+                                                        <span className="revision-card__tag revision-card__tag--more">
                                                             +{problem.tags.length - 3}
                                                         </span>
                                                     )}
@@ -243,26 +242,25 @@ export default function Revisions() {
                                         )}
 
                                         {/* Action Buttons */}
-                                        <div className="flex gap-2">
+                                        <div className="revision-card__actions">
                                             <button
                                                 onClick={() => navigate(`/problem/${problem.id}`)}
-                                                className="flex-1 rounded-lg border border-slate-600 hover:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-300 transition"
+                                                className="revision-card__view-btn"
                                             >
                                                 View Details
                                             </button>
                                             <button
                                                 onClick={() => handleMarkRevised(problem.id)}
                                                 disabled={markingId === problem.id}
-                                                className="flex-1 rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-green-900 disabled:cursor-not-allowed px-4 py-2 text-sm font-semibold text-white transition"
+                                                className="revision-card__mark-btn"
                                             >
                                                 {markingId === problem.id ? (
-                                                    <span className="flex items-center justify-center gap-2">
+                                                    <>
                                                         <svg
-                                                            className="animate-spin h-4 w-4"
+                                                            className="revision-card__mark-btn-spinner"
                                                             viewBox="0 0 24 24"
                                                         >
                                                             <circle
-                                                                className="opacity-25"
                                                                 cx="12"
                                                                 cy="12"
                                                                 r="10"
@@ -271,13 +269,12 @@ export default function Revisions() {
                                                                 fill="none"
                                                             />
                                                             <path
-                                                                className="opacity-75"
                                                                 fill="currentColor"
                                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                                             />
                                                         </svg>
                                                         Marking...
-                                                    </span>
+                                                    </>
                                                 ) : (
                                                     'Mark Revised'
                                                 )}

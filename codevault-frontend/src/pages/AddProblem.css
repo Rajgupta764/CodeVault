@@ -1,0 +1,541 @@
+/* AddProblem Page Styling */
+
+/* Main container */
+.add-problem {
+    min-height: 100vh;
+}
+
+/* Header/Navigation bar */
+.add-problem-header {
+    background-color: transparent;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+.add-problem-header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1rem;
+}
+
+.add-problem-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-problem-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Back button */
+.add-problem-back-btn {
+    background-color: transparent;
+    border: none;
+    color: rgb(148, 163, 184);
+    cursor: pointer;
+    transition: color 200ms ease;
+    padding: 0.25rem;
+}
+
+.add-problem-back-btn:hover {
+    color: rgb(226, 232, 240);
+}
+
+.add-problem-back-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Header title section */
+.add-problem-header-title-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-problem-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, rgb(99, 102, 241), rgb(147, 51, 234));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.add-problem-subtitle {
+    font-size: 0.875rem;
+    color: rgb(148, 163, 184);
+    margin-top: 0.25rem;
+}
+
+/* Main content */
+.add-problem-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    max-width: 48rem;
+}
+
+/* Error alert */
+.add-problem-error {
+    margin-bottom: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(248, 113, 113, 0.5);
+    background-color: rgba(239, 68, 68, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    color: rgb(254, 226, 226);
+    animation: slideIn 300ms ease-out;
+}
+
+.add-problem-error-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.add-problem-error-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgb(248, 113, 113);
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    fill: currentColor;
+}
+
+/* Form */
+.add-problem-form {
+    border-radius: 0.75rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: transparent;
+    animation: fadeIn 300ms ease-out;
+}
+
+/* Form section */
+.add-problem-form-section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form label */
+.add-problem-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(203, 213, 225);
+    margin-bottom: 0.5rem;
+}
+
+.add-problem-label-required {
+    color: rgb(248, 113, 113);
+}
+
+/* Input field */
+.add-problem-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(71, 85, 105);
+    background-color: rgba(3, 41, 102, 0.5);
+    color: rgb(226, 232, 240);
+    font-size: 1rem;
+    transition: all 200ms ease;
+    outline: none;
+}
+
+.add-problem-input::placeholder {
+    color: rgb(27, 57, 100);
+}
+
+.add-problem-input:hover {
+    border-color: rgb(71, 85, 105);
+}
+
+.add-problem-input:focus {
+    border-color: rgb(99, 102, 241);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Select dropdown specific styles */
+.add-problem-input[type="select"],
+select.add-problem-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(148, 163, 184)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    background-color: rgba(30, 41, 59, 0.6);
+}
+
+select.add-problem-input:hover {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: rgb(99, 102, 241);
+}
+
+select.add-problem-input:focus {
+    background-color: rgba(30, 41, 59, 0.9);
+    border-color: rgb(99, 102, 241);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Option styling */
+select.add-problem-input option {
+    background-color: rgb(15, 23, 42);
+    color: rgb(226, 232, 240);
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+select.add-problem-input option:hover,
+select.add-problem-input option:focus,
+select.add-problem-input option:checked {
+    background-color: rgb(30, 41, 59);
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, rgba(30, 41, 59, 1) 100%);
+    color: rgb(199, 210, 254);
+}
+
+select.add-problem-input option:disabled {
+    color: rgb(100, 116, 139);
+}
+
+/* Input with icon wrapper */
+.add-problem-input-icon-wrapper {
+    position: relative;
+}
+
+.add-problem-input-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding-left: 0.75rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.add-problem-input-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgb(100, 116, 139);
+}
+
+.add-problem-input-with-icon {
+    padding-left: 2.5rem;
+}
+
+/* Helper text */
+.add-problem-helper-text {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: rgb(100, 116, 139);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.add-problem-helper-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: currentColor;
+}
+
+/* Grid layout for form fields */
+.add-problem-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .add-problem-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Test cases section */
+.add-problem-test-cases-header {
+    padding-top: 1rem;
+    border-top: 1px solid rgb(71, 85, 105);
+}
+
+.add-problem-test-cases-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.add-problem-test-cases-title-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-problem-test-cases-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(203, 213, 225);
+}
+
+.add-problem-test-cases-sublabel {
+    font-size: 0.75rem;
+    color: rgb(100, 116, 139);
+    margin-top: 0.25rem;
+}
+
+/* Add test case button */
+.add-problem-add-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid rgb(99, 102, 241);
+    color: rgb(147, 197, 253);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 200ms ease;
+}
+
+.add-problem-add-btn:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    border-color: rgb(147, 197, 253);
+}
+
+.add-problem-add-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Test cases list */
+.add-problem-test-cases-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Test case card */
+.add-problem-test-case-card {
+    padding: 1.25rem;
+    border: 1px solid rgb(71, 85, 105);
+    border-radius: 0.75rem;
+    background-color: rgba(30, 41, 59, 0.3);
+    transition: border-color 200ms ease;
+}
+
+.add-problem-test-case-card:hover {
+    border-color: rgb(100, 116, 139);
+}
+
+.add-problem-test-case-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.add-problem-test-case-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(226, 232, 240);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-problem-test-case-number {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: rgba(99, 102, 241, 0.2);
+    color: rgb(147, 197, 253);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Remove test case button */
+.add-problem-remove-btn {
+    background-color: transparent;
+    border: none;
+    color: rgb(248, 113, 113);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color 200ms ease;
+}
+
+.add-problem-remove-btn:hover {
+    color: rgb(252, 165, 165);
+}
+
+.add-problem-remove-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Test case fields */
+.add-problem-test-case-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.add-problem-test-case-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-problem-field-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgb(100, 116, 139);
+    margin-bottom: 0.25rem;
+}
+
+/* Textarea */
+.add-problem-textarea {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid rgb(71, 85, 105);
+    background-color: rgb(30, 41, 59);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: rgb(226, 232, 240);
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    transition: all 200ms ease;
+}
+
+.add-problem-textarea::placeholder {
+    color: rgb(100, 116, 139);
+}
+
+.add-problem-textarea:focus {
+    border-color: rgb(96, 165, 250);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Test cases description */
+.add-problem-test-cases-desc {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: rgb(100, 116, 139);
+}
+
+/* Form actions */
+.add-problem-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(71, 85, 105);
+}
+
+.add-problem-submit-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, rgb(99, 102, 241), rgb(147, 51, 234));
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 200ms ease;
+    font-size: 1rem;
+    min-height: 3rem;
+}
+
+.add-problem-submit-btn:hover:not(:disabled) {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+
+.add-problem-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.add-problem-submit-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Cancel button */
+.add-problem-cancel-btn {
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid rgb(99, 102, 241);
+    color: rgb(147, 197, 253);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms ease;
+    font-size: 1rem;
+    min-height: 3rem;
+}
+
+.add-problem-cancel-btn:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    border-color: rgb(147, 197, 253);
+}
+
+/* Spinner */
+.add-problem-spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

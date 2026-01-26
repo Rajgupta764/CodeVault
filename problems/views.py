@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .models import Problem, Solution, Collection
 from .serializers import ProblemSerializer, ProblemListSerializer, SolutionSerializer, UserSerializer, CollectionSerializer, CollectionListSerializer
-from .services import execute_code
+from .services import execute_code, run_test_cases
 
 
 class RegisterView(APIView):
@@ -290,6 +290,53 @@ class ProblemViewSet(viewsets.ModelViewSet):
             'count': due_problems.count(),
             'problems': serializer.data
         }, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def run_tests(self, request, pk=None):
+        """
+        Run code against problem's test cases (LeetCode-style).
+        
+        POST /api/problems/{id}/run_tests/
+        
+        Expected POST data:
+        {
+            "language": "PYTHON",
+            "code": "def solution():\\n    return 42"
+        }
+        
+        Returns:
+            200 OK: Test results with pass/fail status
+            400 Bad Request: Missing required fields or no test cases
+            403 Forbidden: User doesn't own the problem
+        """
+        problem = self.get_object()
+        
+        # Check if problem has test cases
+        if not problem.test_cases:
+            return Response(
+                {'error': 'This problem has no test cases defined'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Get language and code from request
+        language = request.data.get('language')
+        code = request.data.get('code')
+        
+        if not language or not code:
+            return Response(
+                {'error': 'Both language and code are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Run test cases
+        try:
+            results = run_test_cases(language, code, problem.test_cases)
+            return Response(results, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to run tests: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class SolutionViewSet(viewsets.ModelViewSet):

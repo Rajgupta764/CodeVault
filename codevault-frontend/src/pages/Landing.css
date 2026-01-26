@@ -1,0 +1,143 @@
+/* Landing Page Styles */
+
+.landing-page {
+    min-height: 100vh;
+    background-color: #020617;
+    color: white;
+}
+
+/* Background Effects */
+.landing-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+}
+
+.landing-background__gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+}
+
+.landing-background__orbs {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.landing-background__orb--top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(79, 70, 229, 0.2);
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    filter: blur(120px);
+    opacity: 0.3;
+}
+
+.landing-background__orb--bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(147, 51, 234, 0.2);
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    filter: blur(120px);
+    opacity: 0.3;
+}
+
+/* Footer */
+.landing-footer {
+    border-top: 1px solid #1e293b;
+    padding: 3rem 1rem;
+    margin-top: 5rem;
+}
+
+@media (min-width: 640px) {
+    .landing-footer {
+        padding: 3rem 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .landing-footer {
+        padding: 3rem 2rem;
+    }
+}
+
+.landing-footer__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+}
+
+.landing-footer__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.landing-footer__logo-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing-footer__logo-icon svg {
+    width: 1rem;
+    height: 1rem;
+    color: white;
+}
+
+.landing-footer__logo-text {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.landing-footer__tagline {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.landing-footer__links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.landing-footer__link {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-size: 0.875rem;
+    padding: 0;
+}
+
+.landing-footer__link:hover {
+    color: white;
+}
+
+.landing-footer__copyright {
+    font-size: 0.75rem;
+    color: #475569;
+    margin-top: 2rem;
+}

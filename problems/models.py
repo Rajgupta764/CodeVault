@@ -35,6 +35,13 @@ class Problem(models.Model):
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='MEDIUM')
     tags = models.JSONField(default=list, help_text="Array of problem tags")
     
+    # Test Cases (LeetCode-style)
+    test_cases = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Array of test cases with input and expected output. Format: [{\"input\": \"...\", \"output\": \"...\", \"explanation\": \"...\"}]"
+    )
+    
     # Tracking Info
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='ATTEMPTED')
     solved_count = models.PositiveIntegerField(default=0)

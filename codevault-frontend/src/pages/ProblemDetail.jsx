@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Editor from '@monaco-editor/react'
 import { getProblemById, getSolutions, getCollections, addProblemToCollection } from '../utils/api'
+import './ProblemDetail.css'
 
 export default function ProblemDetail() {
     const { id } = useParams()
@@ -100,10 +101,10 @@ export default function ProblemDetail() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
-                    <p className="text-slate-400">Loading problem...</p>
+            <div className="problem-detail-loading">
+                <div className="problem-detail-loading__content">
+                    <div className="spinner problem-detail-loading__spinner" style={{ width: '48px', height: '48px', borderWidth: '4px' }} />
+                    <p className="problem-detail-loading__text">Loading problem details...</p>
                 </div>
             </div>
         )
@@ -111,20 +112,28 @@ export default function ProblemDetail() {
 
     if (error || !problem) {
         return (
-            <div className="min-h-screen bg-slate-900 text-slate-100">
-                <header className="border-b border-slate-800 bg-slate-950/50 backdrop-blur">
+            <div className="min-h-screen">
+                <header className="navbar">
                     <div className="container mx-auto px-4 py-4">
                         <button
                             onClick={() => navigate('/dashboard')}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-2"
                         >
-                            ← Back to Dashboard
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span>Back to Dashboard</span>
                         </button>
                     </div>
                 </header>
                 <div className="container mx-auto px-4 py-8">
-                    <div className="rounded-lg border border-red-500 bg-red-500/10 px-6 py-4 text-red-200">
-                        {error}
+                    <div className="rounded-xl border border-red-400/50 bg-red-500/10 backdrop-blur-sm px-6 py-4 text-red-200 max-w-2xl mx-auto">
+                        <div className="flex items-start gap-2">
+                            <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <span>{error}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,99 +141,126 @@ export default function ProblemDetail() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100">
-            <header className="border-b border-slate-800 bg-slate-950/50 backdrop-blur">
-                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="text-blue-400 hover:text-blue-300 font-medium"
-                    >
-                        ← Back to Dashboard
-                    </button>
-                    <div className="flex items-center gap-3">
-                        <select
-                            onChange={(e) => handleAddToCollection(e.target.value)}
-                            disabled={addingToCollection || collections.length === 0}
-                            className="rounded-lg border border-slate-600 bg-slate-800 text-slate-300 px-4 py-2 hover:border-slate-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-                            value=""
-                        >
-                            <option value="" disabled>
-                                {addingToCollection ? 'Adding...' : collections.length === 0 ? 'No Collections' : 'Add to Collection'}
-                            </option>
-                            {collections.map((collection) => (
-                                <option key={collection.id} value={collection.id}>
-                                    {collection.name}
-                                </option>
-                            ))}
-                        </select>
+        <div className="problem-detail-page">
+            {/* Navigation Bar */}
+            <header className="problem-detail-navbar">
+                <div className="problem-detail-navbar__container">
+                    <div className="problem-detail-navbar__content">
                         <button
-                            onClick={() => navigate(`/add-solution/${id}`)}
-                            className="rounded-lg bg-blue-600 hover:bg-blue-500 px-4 py-2 font-medium text-white transition"
+                            onClick={() => navigate('/dashboard')}
+                            className="problem-detail-navbar__back"
                         >
-                            + Add Solution
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span>Back to Dashboard</span>
                         </button>
+                        <div className="problem-detail-navbar__actions">
+                            <select
+                                onChange={(e) => handleAddToCollection(e.target.value)}
+                                disabled={addingToCollection || collections.length === 0}
+                                className="problem-detail-navbar__collection-select"
+                                value=""
+                            >
+                                <option value="" disabled>
+                                    {addingToCollection ? 'Adding...' : collections.length === 0 ? 'No Collections' : '📁 Add to Collection'}
+                                </option>
+                                {collections.map((collection) => (
+                                    <option key={collection.id} value={collection.id}>
+                                        {collection.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={() => navigate(`/add-solution/${id}`)}
+                                className="problem-detail-navbar__add-solution-btn"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Add Solution</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <main className="container mx-auto px-4 py-8 max-w-6xl">
+            <main className="problem-detail-main">
                 {/* Success Message */}
                 {success && (
-                    <div className="mb-6 rounded-lg border border-green-500 bg-green-500/10 px-4 py-3 text-green-200">
-                        {success}
+                    <div className="problem-detail-message problem-detail-message--success">
+                        <div className="problem-detail-message__content">
+                            <div className="problem-detail-message__icon">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <span>{success}</span>
+                        </div>
                     </div>
                 )}
 
                 {/* Error Message */}
                 {error && (
-                    <div className="mb-6 rounded-lg border border-red-500 bg-red-500/10 px-4 py-3 text-red-200">
-                        {error}
+                    <div className="problem-detail-message problem-detail-message--error">
+                        <div className="problem-detail-message__content">
+                            <div className="problem-detail-message__icon">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <span>{error}</span>
+                        </div>
                     </div>
                 )}
                 {/* Problem Info Card */}
-                <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 mb-8">
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                        <div className="flex-1">
-                            <h1 className="text-3xl font-bold text-slate-100 mb-3">
+                <div className="problem-info-card">
+                    <div className="problem-info-card__header">
+                        <div className="problem-info-card__title-section">
+                            <h1 className="problem-info-card__title">
                                 {problem.problem_name}
                             </h1>
-                            <div className="flex flex-wrap items-center gap-3">
-                                <span
-                                    className={`inline-block rounded-full border px-3 py-1 text-sm font-medium ${getDifficultyClass(
-                                        problem.difficulty
-                                    )}`}
-                                >
+                            <div className="problem-info-card__badges">
+                                <span className={`problem-info-card__badge problem-info-card__badge--${problem.difficulty.toLowerCase()}`}>
                                     {problem.difficulty}
                                 </span>
-                                <span className="text-slate-400 text-sm">
+                                <span className="problem-info-card__badge problem-info-card__badge--platform">
                                     {problem.platform}
                                 </span>
-                                <span className="text-slate-500 text-sm">
-                                    Solved {problem.solved_count || 0} time(s)
+                                <span className="problem-info-card__solved-count">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Solved {problem.solved_count || 0}x
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     {problem.problem_link && (
-                        <div className="mb-3">
+                        <div className="problem-info-card__link">
                             <a
                                 href={problem.problem_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-400 hover:text-blue-300 hover:underline text-sm"
                             >
-                                🔗 Open Problem Link →
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                <span>Open Problem on {problem.platform}</span>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
                             </a>
                         </div>
                     )}
 
                     {problem.tags && problem.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="problem-info-card__tags">
                             {problem.tags.map((tag, idx) => (
                                 <span
                                     key={idx}
-                                    className="rounded-md bg-slate-700/50 px-2.5 py-1 text-xs text-slate-300"
+                                    className="problem-info-card__tag"
                                 >
                                     {tag}
                                 </span>
@@ -234,57 +270,70 @@ export default function ProblemDetail() {
                 </div>
 
                 {/* Solutions Section */}
-                <div className="mb-6">
-                    <h2 className="text-2xl font-semibold mb-4">
-                        Solutions ({solutions.length})
+                <div className="solutions-header">
+                    <h2 className="solutions-header__title">
+                        <span className="solutions-header__icon">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                        </span>
+                        <span>Solutions ({solutions.length})</span>
                     </h2>
                 </div>
 
                 {solutions.length === 0 ? (
-                    <div className="rounded-lg border border-slate-700 bg-slate-800/50 px-6 py-12 text-center">
-                        <p className="text-slate-400 mb-4">No solutions added yet</p>
+                    <div className="solutions-empty">
+                        <div className="solutions-empty__icon">💡</div>
+                        <h3 className="solutions-empty__title">No solutions yet</h3>
+                        <p className="solutions-empty__description">Add your first solution to this problem</p>
                         <button
                             onClick={() => navigate(`/add-solution/${id}`)}
-                            className="rounded-lg bg-blue-600 hover:bg-blue-500 px-6 py-2 text-white transition"
+                            className="solutions-empty__button"
                         >
-                            Add First Solution
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Add First Solution</span>
                         </button>
                     </div>
                 ) : (
-                    <div className="space-y-6">
-                        {solutions.map((solution) => (
+                    <div className="solutions-list">
+                        {solutions.map((solution, index) => (
                             <div
                                 key={solution.id}
-                                className="rounded-lg border border-slate-700 bg-slate-800/50 overflow-hidden"
+                                className="solution-card"
+                                style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <div className="border-b border-slate-700 px-6 py-4 bg-slate-800/80">
-                                    <div className="flex flex-wrap items-center gap-3">
-                                        <span
-                                            className={`inline-block rounded-full border px-3 py-1 text-sm font-medium ${getApproachBadge(
-                                                solution.approach
-                                            )}`}
-                                        >
+                                <div className="solution-card__header">
+                                    <div className="solution-card__header-badges">
+                                        <span className={`solution-card__badge solution-card__badge--${solution.approach.toLowerCase().replace('_', '-')}`}>
                                             {solution.approach.replace('_', ' ')}
                                         </span>
-                                        <span className="text-slate-300 font-medium text-sm">
+                                        <span className="solution-card__badge solution-card__badge--language">
                                             {solution.language}
                                         </span>
                                         {solution.time_complexity && (
-                                            <span className="text-slate-400 text-sm">
-                                                Time: {solution.time_complexity}
+                                            <span className="solution-card__complexity">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>{solution.time_complexity}</span>
                                             </span>
                                         )}
                                         {solution.space_complexity && (
-                                            <span className="text-slate-400 text-sm">
-                                                Space: {solution.space_complexity}
+                                            <span className="solution-card__complexity">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                                                </svg>
+                                                <span>{solution.space_complexity}</span>
                                             </span>
                                         )}
                                     </div>
                                 </div>
 
-                                <div className="border-b border-slate-700">
+                                <div className="solution-card__code">
                                     <Editor
-                                        height="300px"
+                                        height="350px"
                                         language={solution.language.toLowerCase()}
                                         value={solution.code}
                                         theme="vs-dark"
@@ -295,18 +344,28 @@ export default function ProblemDetail() {
                                             lineNumbers: 'on',
                                             scrollBeyondLastLine: false,
                                             automaticLayout: true,
+                                            padding: { top: 16, bottom: 16 },
                                         }}
                                     />
                                 </div>
 
                                 {solution.notes && (
-                                    <div className="px-6 py-4 bg-slate-900/50">
-                                        <h4 className="text-sm font-medium text-slate-300 mb-2">
-                                            Notes:
-                                        </h4>
-                                        <p className="text-sm text-slate-400 whitespace-pre-wrap">
-                                            {solution.notes}
-                                        </p>
+                                    <div className="solution-card__notes">
+                                        <div className="solution-card__notes-content">
+                                            <div className="solution-card__notes-icon">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                                </svg>
+                                            </div>
+                                            <div className="solution-card__notes-body">
+                                                <h4 className="solution-card__notes-title">
+                                                    Notes
+                                                </h4>
+                                                <p className="solution-card__notes-text">
+                                                    {solution.notes}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </div>

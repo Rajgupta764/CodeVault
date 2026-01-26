@@ -1,0 +1,31 @@
+/* CollectionCard Examples - Responsive Grid Layouts */
+
+/* 3-column responsive grid for collection displays */
+.collections-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    /* 24px */
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 640px) {
+    .collections-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop: 3 columns */
+@media (min-width: 1024px) {
+    .collections-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Single column stacked layout */
+.collections-grid-stacked {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    /* 24px */
+}

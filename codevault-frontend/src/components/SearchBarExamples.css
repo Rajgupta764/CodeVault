@@ -1,0 +1,233 @@
+/* SearchBarExamples Component Styling */
+
+/* Main wrapper container */
+.search-example {
+    width: 100%;
+}
+
+/* Search input wrapper */
+.search-example-search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+/* Grid layout for problem cards (Basic & Other Examples) */
+.search-example-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .search-example-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .search-example-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Empty state message */
+.search-example-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 0;
+    color: rgb(148, 163, 184);
+}
+
+.search-example-empty-title {
+    font-size: 1.125rem;
+}
+
+.search-example-empty-subtitle {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* List layout (Multi-field & Highlighting Examples) */
+.search-example-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* List item */
+.search-example-list-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 200ms ease;
+}
+
+.search-example-list-item:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.search-example-list-item-title {
+    font-weight: 600;
+    color: rgb(241, 245, 250);
+}
+
+.search-example-list-item-platform {
+    font-size: 0.875rem;
+    color: rgb(148, 163, 184);
+    margin-top: 0.25rem;
+}
+
+.search-example-list-item-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.search-example-list-item-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: rgb(147, 197, 253);
+}
+
+.search-example-list-item-difficulty {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(226, 232, 240);
+}
+
+/* Stats grid */
+.search-example-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+    .search-example-stats {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Individual stat card */
+.search-example-stat-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.search-example-stat-card.total {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-example-stat-card.easy {
+    border-color: rgba(52, 211, 153, 0.3);
+    background-color: rgba(52, 211, 153, 0.1);
+}
+
+.search-example-stat-card.medium {
+    border-color: rgba(251, 146, 60, 0.3);
+    background-color: rgba(251, 146, 60, 0.1);
+}
+
+.search-example-stat-card.hard {
+    border-color: rgba(239, 68, 68, 0.3);
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.search-example-stat-card.solved {
+    border-color: rgba(59, 130, 246, 0.3);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.search-example-stat-label {
+    font-size: 0.875rem;
+    color: rgb(148, 163, 184);
+}
+
+.search-example-stat-label.easy {
+    color: rgb(52, 211, 153);
+}
+
+.search-example-stat-label.medium {
+    color: rgb(251, 146, 60);
+}
+
+.search-example-stat-label.hard {
+    color: rgb(239, 68, 68);
+}
+
+.search-example-stat-label.solved {
+    color: rgb(96, 165, 250);
+}
+
+.search-example-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(226, 232, 240);
+    margin-top: 0.25rem;
+}
+
+.search-example-stat-value.easy {
+    color: rgb(167, 243, 208);
+}
+
+.search-example-stat-value.medium {
+    color: rgb(253, 224, 71);
+}
+
+.search-example-stat-value.hard {
+    color: rgb(252, 165, 165);
+}
+
+.search-example-stat-value.solved {
+    color: rgb(147, 197, 253);
+}
+
+/* Highlight text (search term highlighting) */
+.search-example-highlight {
+    background-color: rgba(234, 179, 8, 0.3);
+    color: rgb(250, 204, 21);
+    font-weight: 600;
+}
+
+/* Text info/message */
+.search-example-info {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: rgb(148, 163, 184);
+}
+
+.search-example-info-text {
+    color: rgb(226, 232, 240);
+    font-weight: 600;
+}
+
+/* Tip box */
+.search-example-tip {
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-example-tip-text {
+    color: rgb(147, 197, 253);
+    font-size: 0.875rem;
+}
+
+.search-example-tip-code {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+}

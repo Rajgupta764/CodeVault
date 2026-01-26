@@ -54,6 +54,7 @@ class ProblemSerializer(serializers.ModelSerializer):
             'platform',
             'difficulty',
             'tags',
+            'test_cases',
             'status',
             'solved_count',
             'last_solved',

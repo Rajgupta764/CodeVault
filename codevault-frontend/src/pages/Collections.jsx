@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getCollections, createCollection, deleteCollection, getCollectionById } from '../utils/api'
+import CollectionCard from '../components/CollectionCard'
+import {
+    Plus,
+    ArrowLeft,
+    FileCode,
+    FolderPlus,
+    Trash2,
+} from 'lucide-react'
+import './Collections.css'
 
 export default function Collections() {
     const navigate = useNavigate()
@@ -24,6 +33,8 @@ export default function Collections() {
             setSelectedCollection(null)
         }
     }, [id])
+
+
 
     const fetchCollections = async () => {
         setLoading(true)
@@ -111,264 +122,212 @@ export default function Collections() {
     if (selectedCollection) {
         // Collection Detail View
         return (
-            <div className="min-h-screen bg-slate-900 text-slate-100">
-                <header className="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-10">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
+            <div className="collections-page">
+                {/* Header */}
+                <div className="collections-header">
+                    <div className="collections-header__container">
+                        <div className="collections-header__content">
                             <button
                                 onClick={() => {
                                     setSelectedCollection(null)
                                     navigate('/collections')
                                 }}
-                                className="text-blue-400 hover:text-blue-300 font-medium"
+                                className="collections-header__back-btn"
                             >
-                                ← Back to Collections
+                                <ArrowLeft className="w-4 h-4" />
+                                Back to Collections
                             </button>
                             <button
                                 onClick={() => handleDeleteCollection(selectedCollection.id, selectedCollection.name)}
-                                className="rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 font-medium text-white transition"
+                                className="collections-header__delete-btn"
                             >
+                                <Trash2 className="w-4 h-4" />
                                 Delete Collection
                             </button>
                         </div>
                     </div>
-                </header>
+                </div>
 
-                <main className="container mx-auto px-4 py-8">
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-slate-100 mb-2">
+                {/* Content */}
+                <div className="collections-content">
+                    {/* Collection Info */}
+                    <div className="collection-info">
+                        <h1 className="collection-info__title">
                             {selectedCollection.name}
                         </h1>
                         {selectedCollection.description && (
-                            <p className="text-slate-400">{selectedCollection.description}</p>
+                            <p className="collection-info__description">{selectedCollection.description}</p>
                         )}
-                        <p className="text-sm text-slate-500 mt-2">
+                        <p className="collection-info__count">
                             {selectedCollection.problem_count} {selectedCollection.problem_count === 1 ? 'problem' : 'problems'}
                         </p>
                     </div>
 
+                    {/* Problems Grid or Empty State */}
                     {selectedCollection.problems && selectedCollection.problems.length > 0 ? (
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="problems-grid">
                             {selectedCollection.problems.map((problem) => (
                                 <div
                                     key={problem.id}
                                     onClick={() => navigate(`/problem/${problem.id}`)}
-                                    className="rounded-lg border border-slate-700 bg-slate-800/50 p-5 hover:border-slate-600 transition cursor-pointer"
+                                    className="problem-card"
                                 >
-                                    <h3 className="text-lg font-semibold text-slate-100 mb-2 line-clamp-2">
+                                    <h3 className="problem-card__title">
                                         {problem.problem_name}
                                     </h3>
-                                    <div className="flex flex-wrap gap-2 mb-3">
-                                        <span
-                                            className={`px-2 py-1 rounded text-xs font-medium border ${getDifficultyClass(
-                                                problem.difficulty
-                                            )}`}
-                                        >
+                                    <div className="problem-card__tags">
+                                        <span className="problem-card__tag--difficulty">
                                             {problem.difficulty}
                                         </span>
-                                        <span className="px-2 py-1 rounded text-xs font-medium bg-slate-700 text-slate-300">
+                                        <span className="problem-card__tag--platform">
                                             {problem.platform}
                                         </span>
                                     </div>
-                                    <div className="text-sm text-slate-400">
+                                    <div className="problem-card__solutions">
                                         {problem.solution_count} {problem.solution_count === 1 ? 'solution' : 'solutions'}
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="rounded-lg border border-slate-700 bg-slate-800/50 px-6 py-12 text-center">
-                            <div className="max-w-md mx-auto">
-                                <svg
-                                    className="h-16 w-16 text-slate-600 mx-auto mb-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                    />
-                                </svg>
-                                <h3 className="text-xl font-semibold text-slate-300 mb-2">
+                        /* Empty State */
+                        <div className="empty-state">
+                            <div className="empty-state__container">
+                                <div className="empty-state__icon">
+                                    <FileCode className="w-8 h-8" />
+                                </div>
+                                <h3 className="empty-state__title">
                                     No problems in this collection yet
                                 </h3>
-                                <p className="text-slate-400 text-sm mb-6">
+                                <p className="empty-state__description">
                                     To add problems to this collection:
                                 </p>
-                                <ol className="text-left text-sm text-slate-400 space-y-2 mb-6">
-                                    <li className="flex items-start gap-2">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">1</span>
-                                        <span>Go to <strong className="text-slate-300">Dashboard</strong></span>
+                                <ol className="empty-state__steps">
+                                    <li>
+                                        <span className="empty-state__step-number">1</span>
+                                        <span>Go to <span className="highlight">Dashboard</span></span>
                                     </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">2</span>
+                                    <li>
+                                        <span className="empty-state__step-number">2</span>
                                         <span>Click on any problem to view details</span>
                                     </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">3</span>
-                                        <span>Use the <strong className="text-slate-300">"Add to Collection"</strong> dropdown at the top</span>
+                                    <li>
+                                        <span className="empty-state__step-number">3</span>
+                                        <span>Use the <span className="highlight">"Add to Collection"</span> dropdown at the top</span>
                                     </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-semibold">4</span>
+                                    <li>
+                                        <span className="empty-state__step-number">4</span>
                                         <span>Select this collection to add the problem</span>
                                     </li>
                                 </ol>
                                 <button
                                     onClick={() => navigate('/dashboard')}
-                                    className="rounded-lg bg-blue-600 hover:bg-blue-500 px-6 py-2.5 font-medium text-white transition"
+                                    className="empty-state__button"
                                 >
+                                    <ArrowLeft className="w-4 h-4" />
                                     Go to Dashboard
                                 </button>
                             </div>
                         </div>
                     )}
-                </main>
+                </div>
             </div>
         )
     }
 
     // Collections List View
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100">
-            <header className="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-blue-400">Collections</h1>
-                            <p className="text-sm text-slate-400 mt-1">
-                                Organize your problems into collections
-                            </p>
-                        </div>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => navigate('/dashboard')}
-                                className="rounded-lg border border-slate-600 hover:bg-slate-700 px-4 py-2 font-medium text-slate-300 transition"
-                            >
-                                Dashboard
-                            </button>
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="rounded-lg bg-blue-600 hover:bg-blue-700 px-4 py-2 font-semibold text-white transition"
-                            >
-                                + Create Collection
-                            </button>
-                        </div>
+        <div className="collections-page">
+            {/* Header Section */}
+            <div className="collections-list">
+                {/* Page Title & Actions */}
+                <div className="collections-list__header">
+                    <div className="collections-list__title-section">
+                        <h1>Collections</h1>
+                        <p>Organize your problems into collections</p>
+                    </div>
+                    <div className="collections-list__actions">
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className="collections-list__dashboard-btn"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            <span>Dashboard</span>
+                        </button>
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="collections-list__create-btn"
+                        >
+                            <Plus className="w-4 h-4" />
+                            <span>Create Collection</span>
+                        </button>
                     </div>
                 </div>
-            </header>
 
-            <main className="container mx-auto px-4 py-8">
+                {/* Error Message */}
                 {error && (
-                    <div className="mb-6 rounded-lg border border-red-500 bg-red-500/10 px-4 py-3 text-red-200">
+                    <div className="error-message">
                         {error}
                     </div>
                 )}
 
+                {/* Loading State */}
                 {loading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
-                            <p className="text-slate-400">Loading collections...</p>
+                    <div className="loading-state">
+                        <div className="loading-state__content">
+                            <div className="loading-spinner"></div>
+                            <p className="loading-state__text">Loading collections...</p>
                         </div>
                     </div>
                 ) : collections.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <div className="rounded-full bg-slate-800 p-6 mb-4">
-                            <svg
-                                className="h-16 w-16 text-slate-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                />
-                            </svg>
+                    /* Empty State */
+                    <div className="empty-collections">
+                        <div className="empty-collections__icon">
+                            <FolderPlus className="w-10 h-10" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-300 mb-2">
-                            No Collections Yet
-                        </h2>
-                        <p className="text-slate-400 mb-6 text-center max-w-md">
-                            Create your first collection to organize problems by topic, difficulty, or any category you choose.
+                        <h3 className="empty-collections__title">No collections yet</h3>
+                        <p className="empty-collections__description">
+                            Organize your coding problems by creating collections.
+                            Group related problems together for easier revision.
                         </p>
                         <button
                             onClick={() => setShowModal(true)}
-                            className="rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 font-semibold text-white transition"
+                            className="empty-collections__button"
                         >
-                            Create First Collection
+                            <Plus className="w-5 h-5" />
+                            Create your first collection
                         </button>
                     </div>
                 ) : (
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    /* Collections Grid */
+                    <div className="collections-grid">
                         {collections.map((collection) => (
-                            <div
+                            <CollectionCard
                                 key={collection.id}
-                                className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 hover:border-slate-600 transition group"
-                            >
-                                <div className="flex items-start justify-between mb-4">
-                                    <h3
-                                        onClick={() => navigate(`/collections/${collection.id}`)}
-                                        className="text-xl font-semibold text-slate-100 cursor-pointer hover:text-blue-400 transition line-clamp-2"
-                                    >
-                                        {collection.name}
-                                    </h3>
-                                    <button
-                                        onClick={() => handleDeleteCollection(collection.id, collection.name)}
-                                        className="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition"
-                                        title="Delete collection"
-                                    >
-                                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                {collection.description && (
-                                    <p className="text-sm text-slate-400 mb-4 line-clamp-3">
-                                        {collection.description}
-                                    </p>
-                                )}
-
-                                <div className="flex items-center justify-between">
-                                    <div className="text-sm text-slate-500">
-                                        {collection.problem_count} {collection.problem_count === 1 ? 'problem' : 'problems'}
-                                    </div>
-                                    <button
-                                        onClick={() => navigate(`/collections/${collection.id}`)}
-                                        className="text-blue-400 hover:text-blue-300 text-sm font-medium"
-                                    >
-                                        View →
-                                    </button>
-                                </div>
-                            </div>
+                                collection={collection}
+                                onView={() => navigate(`/collections/${collection.id}`)}
+                                onEdit={() => {
+                                    // TODO: Implement edit modal
+                                }}
+                                onDelete={() => handleDeleteCollection(collection.id, collection.name)}
+                            />
                         ))}
                     </div>
                 )}
-            </main>
+            </div>
 
             {/* Create Collection Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-slate-800 rounded-lg shadow-xl max-w-md w-full border border-slate-700">
-                        <div className="border-b border-slate-700 px-6 py-4">
-                            <h2 className="text-xl font-bold text-slate-100">Create Collection</h2>
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <div className="modal__header">
+                            <h2 className="modal__title">Create Collection</h2>
                         </div>
 
-                        <form onSubmit={handleCreateCollection} className="p-6 space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium mb-2 text-slate-300">
-                                    Collection Name <span className="text-red-400">*</span>
+                        <form onSubmit={handleCreateCollection} className="modal__form">
+                            <div className="form-group">
+                                <label htmlFor="name" className="form-label">
+                                    Collection Name <span className="required">*</span>
                                 </label>
                                 <input
                                     id="name"
@@ -376,13 +335,13 @@ export default function Collections() {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="form-input"
                                     placeholder="e.g., Arrays & Strings"
                                 />
                             </div>
 
-                            <div>
-                                <label htmlFor="description" className="block text-sm font-medium mb-2 text-slate-300">
+                            <div className="form-group">
+                                <label htmlFor="description" className="form-label">
                                     Description (optional)
                                 </label>
                                 <textarea
@@ -390,12 +349,12 @@ export default function Collections() {
                                     rows={3}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                                    className="form-input form-textarea"
                                     placeholder="Describe this collection..."
                                 />
                             </div>
 
-                            <div className="flex gap-3 pt-2">
+                            <div className="modal__actions">
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -403,14 +362,14 @@ export default function Collections() {
                                         setFormData({ name: '', description: '' })
                                         setError('')
                                     }}
-                                    className="flex-1 rounded-lg border border-slate-600 hover:bg-slate-700 px-4 py-2.5 font-medium text-slate-300 transition"
+                                    className="modal__cancel-btn"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="flex-1 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-blue-900 disabled:cursor-not-allowed px-4 py-2.5 font-semibold text-white transition"
+                                    className="modal__submit-btn"
                                 >
                                     {submitting ? 'Creating...' : 'Create'}
                                 </button>

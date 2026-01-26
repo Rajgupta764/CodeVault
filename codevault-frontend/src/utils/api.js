@@ -47,4 +47,7 @@ export const removeProblemFromCollection = (collectionId, problemId) => api.post
 // Code execution endpoint
 export const executeCode = (data) => api.post('/execute/', data)
 
+// Test case execution endpoint
+export const runTestCases = (problemId, data) => api.post(`/problems/${problemId}/run_tests/`, data)
+
 export default api

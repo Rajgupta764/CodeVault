@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { executeCode } from '../utils/api';
+import { executeCode, runTestCases } from '../utils/api';
+import './CodeEditor.css';
 
-const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => {
+const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange, problemId = null, testCases = [] }) => {
     const [code, setCode] = useState(initialCode);
     const [selectedLanguage, setSelectedLanguage] = useState(language);
     const [input, setInput] = useState('');
@@ -10,6 +11,12 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [executionStats, setExecutionStats] = useState(null);
+
+    // Test case related states
+    const [testResults, setTestResults] = useState(null);
+    const [runningTests, setRunningTests] = useState(false);
+    const [activeTab, setActiveTab] = useState(testCases.length > 0 ? 'testcases' : 'custom');
+    const [hasTestCases, setHasTestCases] = useState(testCases.length > 0);
 
     // Language options matching backend
     const languageOptions = [
@@ -41,6 +48,15 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
         }
     }, [language]);
 
+    // Update test cases availability
+    useEffect(() => {
+        const hasTests = testCases && testCases.length > 0;
+        setHasTestCases(hasTests);
+        if (hasTests) {
+            setActiveTab('testcases');
+        }
+    }, [testCases]);
+
     // Get Monaco language from backend language
     const getMonacoLanguage = () => {
         const lang = languageOptions.find(l => l.value === selectedLanguage);
@@ -71,6 +87,38 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
         }
     };
 
+    // Handle running test cases (LeetCode-style)
+    const handleRunTests = async () => {
+        if (!code.trim()) {
+            setError('Please write some code first');
+            return;
+        }
+
+        if (!problemId || !hasTestCases) {
+            setError('No test cases available for this problem');
+            return;
+        }
+
+        setRunningTests(true);
+        setTestResults(null);
+        setError('');
+        setOutput('');
+
+        try {
+            const response = await runTestCases(problemId, {
+                language: selectedLanguage,
+                code: code
+            });
+
+            setTestResults(response.data);
+        } catch (err) {
+            console.error('Test execution error:', err);
+            setError(err.response?.data?.error || 'Failed to run tests. Please try again.');
+        } finally {
+            setRunningTests(false);
+        }
+    };
+
     // Handle code execution
     const handleRunCode = async () => {
         if (!code.trim()) {
@@ -82,6 +130,7 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
         setOutput('');
         setError('');
         setExecutionStats(null);
+        setTestResults(null);
 
         try {
             const response = await executeCode({
@@ -117,17 +166,16 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
     };
 
     return (
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-            {/* Header with Language Selector */}
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">Code Editor</h3>
-                <div className="flex items-center gap-4">
-                    <label className="text-gray-300 font-medium">Language:</label>
+        <div className="code-editor">
+            <div className="code-editor-header">
+                <h3 className="code-editor-title">Code Editor</h3>
+                <div className="code-editor-lang">
+                    <label className="code-editor-label">Language:</label>
                     <select
                         value={selectedLanguage}
                         onChange={handleLanguageChange}
-                        className="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled={loading}
+                        className="code-editor-select"
+                        disabled={loading || runningTests}
                     >
                         {languageOptions.map(option => (
                             <option key={option.value} value={option.value}>
@@ -138,8 +186,7 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
                 </div>
             </div>
 
-            {/* Monaco Code Editor */}
-            <div className="mb-4 rounded-lg overflow-hidden border border-gray-700">
+            <div className="code-editor-monaco">
                 <Editor
                     height="400px"
                     language={getMonacoLanguage()}
@@ -158,98 +205,203 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange }) => 
                 />
             </div>
 
-            {/* Input Section */}
-            <div className="mb-4">
-                <label className="block text-gray-300 font-medium mb-2">
-                    Input (stdin):
-                </label>
-                <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Enter test input here..."
-                    className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                    rows="4"
-                    disabled={loading}
-                />
-            </div>
+            {hasTestCases && (
+                <div className="code-editor-tabs">
+                    <button
+                        onClick={() => setActiveTab('testcases')}
+                        className={`code-editor-tab ${activeTab === 'testcases' ? 'active' : ''}`}
+                    >
+                        Test Cases ({testCases.length})
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('custom')}
+                        className={`code-editor-tab ${activeTab === 'custom' ? 'active' : ''}`}
+                    >
+                        Custom Input
+                    </button>
+                </div>
+            )}
 
-            {/* Run Button */}
-            <div className="mb-4">
-                <button
-                    onClick={handleRunCode}
-                    disabled={loading}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 ${loading
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : 'bg-green-600 hover:bg-green-700 active:scale-95'
-                        }`}
-                >
-                    {loading ? (
-                        <span className="flex items-center justify-center gap-2">
-                            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                    fill="none"
-                                />
-                                <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                />
-                            </svg>
-                            Executing...
-                        </span>
-                    ) : (
-                        'Run Code'
+            {hasTestCases && activeTab === 'testcases' && (
+                <div>
+                    <div className="code-editor-block">
+                        <label className="code-editor-label-block">Available Test Cases:</label>
+                        <div className="code-editor-testcases">
+                            {testCases.map((tc, idx) => (
+                                <div key={idx} className="code-editor-testcase">
+                                    <div className="code-editor-testcase-inner">
+                                        <div className="code-editor-testcase-title">Test Case {idx + 1}:</div>
+                                        <div className="code-editor-testcase-row">
+                                            <span className="code-editor-testcase-key">Input:</span>{' '}
+                                            <code className="code-editor-code">{tc.input || '(empty)'}</code>
+                                        </div>
+                                        <div className="code-editor-testcase-row">
+                                            <span className="code-editor-testcase-key">Expected:</span>{' '}
+                                            <code className="code-editor-code">{tc.output}</code>
+                                        </div>
+                                        {tc.explanation && (
+                                            <div className="code-editor-testcase-note">{tc.explanation}</div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleRunTests}
+                        disabled={runningTests}
+                        className={`code-editor-run-tests ${runningTests ? 'disabled' : ''}`}
+                    >
+                        {runningTests ? (
+                            <span className="code-editor-run-label">
+                                <svg className="code-editor-spinner" viewBox="0 0 24 24">
+                                    <circle className="code-editor-spinner-track" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                    <path className="code-editor-spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                Running Tests...
+                            </span>
+                        ) : (
+                            'Run All Tests'
+                        )}
+                    </button>
+
+                    {testResults && (
+                        <div className="code-editor-results">
+                            <div className={`code-editor-results-card ${testResults.all_passed ? 'pass' : 'fail'}`}>
+                                <div className="code-editor-results-head">
+                                    {testResults.all_passed ? (
+                                        <>
+                                            <svg className="code-editor-results-icon pass" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="code-editor-results-title pass">All Tests Passed!</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="code-editor-results-icon fail" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="code-editor-results-title fail">Tests Failed</span>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="code-editor-results-summary">
+                                    Passed: {testResults.passed_count}/{testResults.total_count}
+                                </div>
+
+                                <div className="code-editor-result-list">
+                                    {testResults.results.map((result, idx) => (
+                                        <div key={idx} className={`code-editor-result ${result.passed ? 'pass' : 'fail'}`}>
+                                            <div className="code-editor-result-head">
+                                                {result.passed ? (
+                                                    <svg className="code-editor-result-icon pass" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    </svg>
+                                                ) : (
+                                                    <svg className="code-editor-result-icon fail" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                    </svg>
+                                                )}
+                                                <span className={`code-editor-result-title ${result.passed ? 'pass' : 'fail'}`}>
+                                                    Test Case {result.test_case}
+                                                </span>
+                                            </div>
+                                            <div className="code-editor-result-body">
+                                                <div className="code-editor-result-row">
+                                                    <span className="code-editor-result-key">Input:</span>{' '}
+                                                    <code className="code-editor-code">{result.input || '(empty)'}</code>
+                                                </div>
+                                                <div className="code-editor-result-row">
+                                                    <span className="code-editor-result-key">Expected:</span>{' '}
+                                                    <code className="code-editor-code">{result.expected}</code>
+                                                </div>
+                                                <div className={`code-editor-result-row ${result.passed ? 'pass' : 'fail'}`}>
+                                                    <span className="code-editor-result-key">Actual:</span>{' '}
+                                                    <code className="code-editor-code">{result.actual || '(no output)'}</code>
+                                                </div>
+                                                {result.error && (
+                                                    <div className="code-editor-result-error">
+                                                        <span className="code-editor-result-key">Error:</span> {result.error}
+                                                    </div>
+                                                )}
+                                                {result.explanation && (
+                                                    <div className="code-editor-result-note">{result.explanation}</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     )}
-                </button>
-            </div>
-
-            {/* Execution Statistics */}
-            {executionStats && (
-                <div className="mb-4 p-3 bg-gray-700 rounded-lg border border-gray-600">
-                    <div className="flex gap-6 text-sm text-gray-300">
-                        {executionStats.time && (
-                            <div>
-                                <span className="font-medium">Execution Time:</span>{' '}
-                                <span className="text-green-400">{executionStats.time}s</span>
-                            </div>
-                        )}
-                        {executionStats.memory && (
-                            <div>
-                                <span className="font-medium">Memory Used:</span>{' '}
-                                <span className="text-blue-400">{executionStats.memory} KB</span>
-                            </div>
-                        )}
-                    </div>
                 </div>
             )}
 
-            {/* Output Section */}
-            {output && (
-                <div className="mb-4">
-                    <label className="block text-gray-300 font-medium mb-2">
-                        Output:
-                    </label>
-                    <div className="bg-gray-900 text-green-400 px-4 py-3 rounded-lg border border-gray-700 font-mono text-sm whitespace-pre-wrap max-h-64 overflow-y-auto">
-                        {output}
+            {(!hasTestCases || activeTab === 'custom') && (
+                <div>
+                    <div className="code-editor-block">
+                        <label className="code-editor-label-block">Input (stdin):</label>
+                        <textarea
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Enter test input here..."
+                            className="code-editor-textarea"
+                            rows="4"
+                            disabled={loading}
+                        />
                     </div>
+
+                    <button
+                        onClick={handleRunCode}
+                        disabled={loading}
+                        className={`code-editor-run ${loading ? 'disabled' : ''}`}
+                    >
+                        {loading ? (
+                            <span className="code-editor-run-label">
+                                <svg className="code-editor-spinner" viewBox="0 0 24 24">
+                                    <circle className="code-editor-spinner-track" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                    <path className="code-editor-spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                Executing...
+                            </span>
+                        ) : (
+                            'Run Code'
+                        )}
+                    </button>
+
+                    {executionStats && (
+                        <div className="code-editor-stats">
+                            <div className="code-editor-stats-row">
+                                {executionStats.time && (
+                                    <div className="code-editor-stat">
+                                        <span className="code-editor-stat-key">Execution Time:</span>{' '}
+                                        <span className="code-editor-stat-value time">{executionStats.time}s</span>
+                                    </div>
+                                )}
+                                {executionStats.memory && (
+                                    <div className="code-editor-stat">
+                                        <span className="code-editor-stat-key">Memory Used:</span>{' '}
+                                        <span className="code-editor-stat-value memory">{executionStats.memory} KB</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {output && (
+                        <div className="code-editor-output-block">
+                            <label className="code-editor-label-block">Output:</label>
+                            <div className="code-editor-output">{output}</div>
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* Error Section */}
             {error && (
-                <div className="mb-4">
-                    <label className="block text-red-400 font-medium mb-2">
-                        Error:
-                    </label>
-                    <div className="bg-red-900/20 text-red-400 px-4 py-3 rounded-lg border border-red-700 font-mono text-sm whitespace-pre-wrap max-h-64 overflow-y-auto">
-                        {error}
-                    </div>
+                <div className="code-editor-error-block">
+                    <label className="code-editor-error-label">Error:</label>
+                    <div className="code-editor-error">{error}</div>
                 </div>
             )}
         </div>

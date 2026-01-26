@@ -1,0 +1,300 @@
+/* CollectionCard Component Styling */
+
+/* Main card container */
+.collection-card {
+    position: relative;
+    background-color: rgba(31, 41, 55, 0.3);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    transition: all 200ms ease;
+}
+
+.collection-card:hover {
+    background-color: rgba(31, 41, 55, 0.5);
+    border-color: rgba(75, 85, 99, 0.5);
+}
+
+/* Color accent variants - top border */
+.collection-card.color-blue {
+    border-top: 4px solid rgb(59, 130, 246);
+}
+
+.collection-card.color-green {
+    border-top: 4px solid rgb(34, 197, 94);
+}
+
+.collection-card.color-purple {
+    border-top: 4px solid rgb(168, 85, 247);
+}
+
+.collection-card.color-red {
+    border-top: 4px solid rgb(239, 68, 68);
+}
+
+.collection-card.color-yellow {
+    border-top: 4px solid rgb(234, 179, 8);
+}
+
+/* Card header with icon and title */
+.collection-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.collection-card-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.collection-card-icon {
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+    color: rgb(96, 165, 250);
+}
+
+.collection-card-icon.color-blue {
+    color: rgb(96, 165, 250);
+}
+
+.collection-card-icon.color-green {
+    color: rgb(74, 222, 128);
+}
+
+.collection-card-icon.color-purple {
+    color: rgb(196, 181, 253);
+}
+
+.collection-card-icon.color-red {
+    color: rgb(248, 113, 113);
+}
+
+.collection-card-icon.color-yellow {
+    color: rgb(253, 224, 71);
+}
+
+.collection-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: color 200ms ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collection-card-title:hover {
+    color: rgb(96, 165, 250);
+}
+
+/* Menu button wrapper */
+.collection-card-menu-wrapper {
+    position: relative;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Menu trigger button */
+.collection-card-menu-btn {
+    padding: 0.375rem;
+    background-color: transparent;
+    color: rgb(156, 163, 175);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.collection-card-menu-btn:hover {
+    color: white;
+    background-color: rgba(55, 65, 81, 0.3);
+}
+
+/* Dropdown menu */
+.collection-card-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    background-color: rgb(31, 41, 55);
+    border: 1px solid rgb(55, 65, 81);
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+    min-width: 192px;
+    overflow: hidden;
+}
+
+.collection-card-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background-color: transparent;
+    border: none;
+    color: rgb(209, 213, 219);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+    font-size: 0.875rem;
+}
+
+.collection-card-menu-item:hover {
+    background-color: rgba(55, 65, 81, 0.5);
+}
+
+.collection-card-menu-item:first-child {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.collection-card-menu-item:last-child {
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.collection-card-menu-item.delete {
+    color: rgb(248, 113, 113);
+}
+
+.collection-card-menu-item.delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Description section */
+.collection-card-description {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    min-height: 40px;
+}
+
+.collection-card-description-text {
+    font-size: 0.875rem;
+    color: rgb(156, 163, 175);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Divider */
+.collection-card-divider {
+    border: none;
+    border-top: 1px solid rgba(55, 65, 81, 0.5);
+    margin: 1rem 0;
+}
+
+/* Progress section */
+.collection-card-progress {
+    margin-bottom: 1rem;
+}
+
+.collection-card-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: rgb(107, 114, 128);
+    margin-bottom: 0.5rem;
+}
+
+.collection-card-progress-bar {
+    width: 100%;
+    background-color: rgba(55, 65, 81, 0.5);
+    border-radius: 9999px;
+    height: 0.375rem;
+    overflow: hidden;
+}
+
+.collection-card-progress-fill {
+    height: 0.375rem;
+    border-radius: 9999px;
+    transition: width 300ms ease;
+}
+
+/* Blue progress gradient */
+.collection-card-progress-fill.color-blue {
+    background: linear-gradient(to right, rgb(59, 130, 246), rgb(96, 165, 250));
+}
+
+/* Green progress gradient */
+.collection-card-progress-fill.color-green {
+    background: linear-gradient(to right, rgb(34, 197, 94), rgb(74, 222, 128));
+}
+
+/* Purple progress gradient */
+.collection-card-progress-fill.color-purple {
+    background: linear-gradient(to right, rgb(168, 85, 247), rgb(196, 181, 253));
+}
+
+/* Red progress gradient */
+.collection-card-progress-fill.color-red {
+    background: linear-gradient(to right, rgb(239, 68, 68), rgb(248, 113, 113));
+}
+
+/* Yellow progress gradient */
+.collection-card-progress-fill.color-yellow {
+    background: linear-gradient(to right, rgb(234, 179, 8), rgb(253, 224, 71));
+}
+
+/* Default blue gradient */
+.collection-card-progress-fill {
+    background: linear-gradient(to right, rgb(59, 130, 246), rgb(96, 165, 250));
+}
+
+/* Card footer */
+.collection-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.collection-card-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgb(156, 163, 175);
+}
+
+.collection-card-stats-icon {
+    width: 1rem;
+    height: 1rem;
+    color: rgb(107, 114, 128);
+}
+
+.collection-card-view-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: rgb(96, 165, 250);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 200ms ease;
+}
+
+.collection-card-view-btn:hover {
+    color: rgb(191, 219, 254);
+}
+
+.collection-card-view-btn-icon {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 200ms ease;
+}
+
+.collection-card-view-btn:hover .collection-card-view-btn-icon {
+    transform: translateX(0.125rem);
+}

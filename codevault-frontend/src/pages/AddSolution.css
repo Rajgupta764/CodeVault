@@ -1,0 +1,264 @@
+/* AddSolution Page Styling */
+
+/* Main container */
+.add-solution {
+    min-height: 100vh;
+    background-color: rgb(15, 23, 42);
+    color: rgb(226, 232, 240);
+}
+
+/* Header */
+.add-solution-header {
+    border-bottom: 1px solid rgb(30, 41, 59);
+    background-color: rgba(3, 7, 17, 0.5);
+    backdrop-filter: blur(4px);
+    padding: 1rem 0;
+}
+
+.add-solution-header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.add-solution-header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(96, 165, 250);
+}
+
+/* Main content */
+.add-solution-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    max-width: 56rem;
+}
+
+/* Error alert */
+.add-solution-error {
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(239, 68, 68);
+    background-color: rgba(239, 68, 68, 0.1);
+    padding: 0.75rem 1rem;
+    color: rgb(254, 226, 226);
+}
+
+/* Form */
+.add-solution-form {
+    border-radius: 0.5rem;
+    border: 1px solid rgb(55, 65, 81);
+    background-color: rgba(30, 41, 59, 0.5);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form section */
+.add-solution-form-section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grid layout */
+.add-solution-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+    .add-solution-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Label */
+.add-solution-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.add-solution-label-required {
+    color: rgb(248, 113, 113);
+}
+
+/* Select input */
+.add-solution-select {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(55, 65, 81);
+    background-color: rgb(15, 23, 42);
+    padding: 0.625rem 1rem;
+    color: rgb(226, 232, 240);
+    font-size: 1rem;
+    outline: none;
+    transition: all 200ms ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(148, 163, 184)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.75rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.add-solution-select:focus {
+    border-color: rgb(96, 165, 250);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: rgb(30, 41, 59);
+}
+
+.add-solution-select:hover {
+    border-color: rgb(71, 85, 105);
+    background-color: rgb(30, 41, 59);
+}
+
+/* Option styling for select */
+.add-solution-select option {
+    background-color: rgb(15, 23, 42);
+    color: rgb(226, 232, 240);
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.add-solution-select option:hover,
+.add-solution-select option:focus,
+.add-solution-select option:checked {
+    background-color: rgb(30, 41, 59);
+    background: linear-gradient(90deg, rgba(96, 165, 250, 0.2) 0%, rgba(30, 41, 59, 1) 100%);
+    color: rgb(191, 219, 254);
+}
+
+.add-solution-select option:disabled {
+    color: rgb(100, 116, 139);
+}
+
+/* Text input */
+.add-solution-input {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(55, 65, 81);
+    background-color: rgb(15, 23, 42);
+    padding: 0.625rem 1rem;
+    color: rgb(226, 232, 240);
+    font-size: 1rem;
+    outline: none;
+    transition: all 200ms ease;
+}
+
+.add-solution-input::placeholder {
+    color: rgb(100, 116, 139);
+}
+
+.add-solution-input:focus {
+    border-color: rgb(96, 165, 250);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.add-solution-input:hover {
+    border-color: rgb(71, 85, 105);
+}
+
+/* Textarea */
+.add-solution-textarea {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(55, 65, 81);
+    background-color: rgb(15, 23, 42);
+    padding: 0.625rem 1rem;
+    color: rgb(226, 232, 240);
+    font-size: 1rem;
+    outline: none;
+    transition: all 200ms ease;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.add-solution-textarea::placeholder {
+    color: rgb(100, 116, 139);
+}
+
+.add-solution-textarea:focus {
+    border-color: rgb(96, 165, 250);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.add-solution-textarea:hover {
+    border-color: rgb(71, 85, 105);
+}
+
+/* Code editor section */
+.add-solution-code-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-solution-code-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.add-solution-code-helper {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: rgb(100, 116, 139);
+}
+
+/* Buttons section */
+.add-solution-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding-top: 1rem;
+}
+
+/* Submit button */
+.add-solution-submit-btn {
+    flex: 1;
+    border-radius: 0.5rem;
+    background-color: rgb(37, 99, 235);
+    padding: 0.625rem 1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    transition: all 200ms ease;
+    font-size: 1rem;
+}
+
+.add-solution-submit-btn:hover:not(:disabled) {
+    background-color: rgb(29, 78, 216);
+}
+
+.add-solution-submit-btn:disabled {
+    background-color: rgb(30, 58, 138);
+    cursor: not-allowed;
+}
+
+/* Cancel button */
+.add-solution-cancel-btn {
+    border-radius: 0.5rem;
+    border: 1px solid rgb(71, 85, 105);
+    background-color: transparent;
+    padding: 0.625rem 1.5rem;
+    font-weight: 500;
+    color: rgb(203, 213, 225);
+    cursor: pointer;
+    outline: none;
+    transition: all 200ms ease;
+    font-size: 1rem;
+}
+
+.add-solution-cancel-btn:hover {
+    background-color: rgb(55, 65, 81);
+    border-color: rgb(71, 85, 105);
+}

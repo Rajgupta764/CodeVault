@@ -1,0 +1,222 @@
+:root {
+    --indigo-50: rgba(99, 102, 241, 0.03);
+    --indigo-100: rgba(99, 102, 241, 0.1);
+    --indigo-200: rgba(99, 102, 241, 0.2);
+    --indigo-400: #818cf8;
+    --indigo-500: #6366f1;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-900: #0f172a;
+    --slate-950: #020617;
+    --white: #ffffff;
+}
+
+.how-section {
+    position: relative;
+    width: 100%;
+    padding: 5rem 1rem;
+    background: transparent;
+    overflow: hidden;
+}
+
+.how-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(var(--indigo-50) 1px, transparent 1px), linear-gradient(90deg, var(--indigo-50) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 0%, transparent 100%);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.how-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+}
+
+.how-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.how-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    border-radius: 9999px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: var(--indigo-400);
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.how-badge-dot {
+    position: relative;
+    display: flex;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--indigo-500);
+    border-radius: 50%;
+}
+
+.how-title {
+    font-size: clamp(2rem, 3vw + 1rem, 3rem);
+    font-weight: 800;
+    color: var(--white);
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.how-subtitle {
+    font-size: 1.1rem;
+    color: var(--slate-400);
+    margin: 0;
+    max-width: 56rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.how-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2.5rem;
+}
+
+.how-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.how-step-card {
+    position: relative;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 1.25rem;
+    padding: 2.5rem 2rem;
+    transition: all 0.3s ease;
+}
+
+.how-step-card:hover {
+    border-color: rgba(99, 102, 241, 0.2);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.how-step-header {
+    margin-bottom: 2rem;
+}
+
+.how-step-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(34, 211, 238, 0.2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.how-step-body {
+    position: relative;
+}
+
+.how-step-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0 0 1rem;
+    letter-spacing: -0.01em;
+}
+
+.how-step-text {
+    font-size: 0.95rem;
+    color: var(--slate-400);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.how-connector {
+    display: none;
+    position: absolute;
+    width: 2px;
+    height: 2rem;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.3), transparent);
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .how-section {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .how-step-card {
+        padding: 2.5rem 2.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .how-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem;
+    }
+
+    .how-connector {
+        display: block;
+    }
+
+    .how-step {
+        align-items: stretch;
+    }
+
+    .how-step-card {
+        height: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .how-section {
+        padding-top: 8rem;
+        padding-bottom: 8rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .how-header {
+        margin-bottom: 6rem;
+    }
+
+    .how-step-card {
+        padding: 3rem;
+    }
+
+    .how-step-number {
+        font-size: 4rem;
+    }
+
+    .how-step-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .how-section {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}

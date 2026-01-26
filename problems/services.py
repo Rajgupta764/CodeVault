@@ -512,3 +512,118 @@ def execute_code_judge0(language, code, input_data=""):
             'memory': 0,
             'compile_output': ''
         }
+
+
+# ==================== TEST CASE EXECUTION ====================
+
+def run_test_cases(language, code, test_cases):
+    """
+    Run code against multiple test cases (LeetCode-style).
+    
+    Args:
+        language (str): Programming language (JAVA, PYTHON, CPP, JAVASCRIPT)
+        code (str): Source code to execute
+        test_cases (list): Array of test cases with format:
+            [{"input": "...", "output": "...", "explanation": "..."}]
+    
+    Returns:
+        dict: Test results with pass/fail status for each test case
+        {
+            'all_passed': bool,
+            'passed_count': int,
+            'total_count': int,
+            'results': [
+                {
+                    'test_case': 1,
+                    'input': '...',
+                    'expected': '...',
+                    'actual': '...',
+                    'passed': bool,
+                    'error': '...',
+                    'time': '...',
+                    'explanation': '...'
+                }
+            ]
+        }
+    """
+    def normalize_output(text: str) -> str:
+        """Trim trailing whitespace and unify newlines for fair comparison."""
+        if text is None:
+            return ""
+        # Strip outer whitespace, trim each line's right side, and rejoin
+        lines = [line.rstrip() for line in str(text).strip().splitlines()]
+        return "\n".join(lines)
+
+    if not test_cases:
+        return {
+            'all_passed': False,
+            'passed_count': 0,
+            'total_count': 0,
+            'results': [],
+            'error': 'No test cases provided'
+        }
+    
+    results = []
+    passed_count = 0
+    
+    for idx, test_case in enumerate(test_cases, 1):
+        test_input = test_case.get('input', '')
+        expected_output = normalize_output(test_case.get('output', ''))
+        explanation = test_case.get('explanation', '')
+        
+        # Execute code with this test case's input
+        execution_result = execute_code(language, code, test_input)
+        
+        # Check for compilation or runtime errors
+        if execution_result.get('compile_output'):
+            results.append({
+                'test_case': idx,
+                'input': test_input,
+                'expected': expected_output,
+                'actual': '',
+                'passed': False,
+                'error': f"Compilation Error: {execution_result['compile_output']}",
+                'time': execution_result.get('time', '0'),
+                'explanation': explanation
+            })
+            continue
+        
+        if execution_result.get('error') and execution_result.get('status') != 'Accepted':
+            results.append({
+                'test_case': idx,
+                'input': test_input,
+                'expected': expected_output,
+                'actual': '',
+                'passed': False,
+                'error': execution_result['error'],
+                'time': execution_result.get('time', '0'),
+                'explanation': explanation
+            })
+            continue
+        
+        # Get actual output
+        actual_output = normalize_output(execution_result.get('output', ''))
+        
+        # Compare outputs (normalize whitespace)
+        passed = actual_output == expected_output
+        
+        if passed:
+            passed_count += 1
+        
+        results.append({
+            'test_case': idx,
+            'input': test_input,
+            'expected': expected_output,
+            'actual': actual_output,
+            'passed': passed,
+            'error': '',
+            'time': execution_result.get('time', '0'),
+            'explanation': explanation
+        })
+    
+    return {
+        'all_passed': passed_count == len(test_cases),
+        'passed_count': passed_count,
+        'total_count': len(test_cases),
+        'results': results
+    }
