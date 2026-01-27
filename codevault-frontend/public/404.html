@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <script>
+        // Redirect all 404s to the index.html with the requested path
+        const path = window.location.pathname + window.location.search;
+        if (path !== '/') {
+            window.location.href = '/#' + path.substring(1);
+        } else {
+            window.location.href = '/';
+        }
+    </script>
+</head>
+
+<body>
+    <p>Redirecting...</p>
+</body>
+
+</html>
