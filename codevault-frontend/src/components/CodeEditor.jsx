@@ -3,7 +3,7 @@ import Editor from '@monaco-editor/react';
 import { executeCode, runTestCases } from '../utils/api';
 import './CodeEditor.css';
 
-const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange, problemId = null, testCases = [] }) => {
+const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange, problemId = null, testCases = [], showLanguageSelector = true }) => {
     const [code, setCode] = useState(initialCode);
     const [selectedLanguage, setSelectedLanguage] = useState(language);
     const [input, setInput] = useState('');
@@ -169,21 +169,23 @@ const CodeEditor = ({ initialCode = '', language = 'PYTHON', onCodeChange, probl
         <div className="code-editor">
             <div className="code-editor-header">
                 <h3 className="code-editor-title">Code Editor</h3>
-                <div className="code-editor-lang">
-                    <label className="code-editor-label">Language:</label>
-                    <select
-                        value={selectedLanguage}
-                        onChange={handleLanguageChange}
-                        className="code-editor-select"
-                        disabled={loading || runningTests}
-                    >
-                        {languageOptions.map(option => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                {showLanguageSelector && (
+                    <div className="code-editor-lang">
+                        <label className="code-editor-label">Language:</label>
+                        <select
+                            value={selectedLanguage}
+                            onChange={handleLanguageChange}
+                            className="code-editor-select"
+                            disabled={loading || runningTests}
+                        >
+                            {languageOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
             </div>
 
             <div className="code-editor-monaco">

@@ -147,6 +147,7 @@ export default function AddSolution() {
                             onCodeChange={handleCodeChange}
                             problemId={id}
                             testCases={problem?.test_cases || []}
+                            showLanguageSelector={false}
                         />
                         <p className="add-solution-code-helper">
                             Use the editor to write your code and test it before submitting

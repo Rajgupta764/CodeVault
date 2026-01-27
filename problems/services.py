@@ -42,22 +42,24 @@ POLL_INTERVAL = 1  # seconds
 
 # ==================== HELPER FUNCTIONS ====================
 
+
+
 def wrap_java_code(code):
     """
     Wrap Java code with imports and main method (LeetCode-style).
-    Automatically adds common Java imports so users don't need to.
+    Automatically adds common Java imports and helper classes so users don't need to.
+    Used for regular code execution.
     
     Args:
         code (str): Java source code
         
     Returns:
-        str: Wrapped Java code ready to execute with imports
+        str: Wrapped Java code ready to execute with imports and helper classes
     """
     code = code.strip()
     
     # Common Java imports (LeetCode-style)
-    common_imports = """
-import java.util.*;
+    common_imports = """import java.util.*;
 import java.io.*;
 import java.lang.*;
 import java.math.*;
@@ -67,37 +69,542 @@ import java.math.*;
     has_imports = code.startswith('import ')
     
     # Check if code already has a main method
-    if 'static void main' in code:
-        # If it has main but no imports, add them
-        if not has_imports:
-            return common_imports + "\n" + code
+    if 'static void main' in code or 'public static void main' in code:
+        # Code already has main, return as-is (user wrote complete code)
         return code
     
-    # Remove 'public' from any class declaration
+    # Remove 'public' from any class declaration (can't have multiple public classes)
     # Java requires public class name to match filename
     import re
     code = re.sub(r'\bpublic\s+class\s+', 'class ', code)
     
     # Pattern 1: User has a class (LeetCode style - just Solution class)
-    # Add imports + Main class FIRST so Piston runs it
+    # Put Solution class INSIDE Main class so it can access inner helper classes
     if 'class ' in code:
         return f"""{common_imports}
 
 public class Main {{
+    // Helper class for linked list problems
+    public static class ListNode {{
+        int val;
+        ListNode next;
+        ListNode() {{}}
+        ListNode(int val) {{ this.val = val; }}
+        ListNode(int val, ListNode next) {{ this.val = val; this.next = next; }}
+        
+        // Convert array to ListNode
+        public static ListNode fromArray(int[] arr) {{
+            if (arr == null || arr.length == 0) return null;
+            ListNode head = new ListNode(arr[0]);
+            ListNode current = head;
+            for (int i = 1; i < arr.length; i++) {{
+                current.next = new ListNode(arr[i]);
+                current = current.next;
+            }}
+            return head;
+        }}
+        
+        // Convert ListNode to array
+        public static int[] toArray(ListNode head) {{
+            if (head == null) return new int[0];
+            List<Integer> result = new ArrayList<>();
+            ListNode current = head;
+            while (current != null) {{
+                result.add(current.val);
+                current = current.next;
+            }}
+            int[] arr = new int[result.size()];
+            for (int i = 0; i < result.size(); i++) {{
+                arr[i] = result.get(i);
+            }}
+            return arr;
+        }}
+    }}
+
+    // Helper class for tree problems
+    public static class TreeNode {{
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {{}}
+        TreeNode(int val) {{ this.val = val; }}
+        TreeNode(int val, TreeNode left, TreeNode right) {{
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }}
+    }}
+
+    // Helper class for graph problems
+    public static class Node {{
+        int val;
+        List<Node> neighbors;
+        Node() {{ this.neighbors = new ArrayList<>(); }}
+        Node(int _val) {{
+            val = _val;
+            neighbors = new ArrayList<>();
+        }}
+        Node(int _val, ArrayList<Node> _neighbors) {{
+            val = _val;
+            neighbors = _neighbors;
+        }}
+    }}
+
+    // User's solution class
+    {code}
+
     public static void main(String[] args) {{
         System.out.println("Code compiled successfully!");
-        // You can add test cases here
     }}
 }}
-
-{code}
 """
     
     # Pattern 2: User wrote just code statements (no class)
-    # Wrap in Main class with imports
+    # Wrap in Main class with imports and helper classes
     return f"""{common_imports}
 
 public class Main {{
+    // Helper class for linked list problems
+    public static class ListNode {{
+        int val;
+        ListNode next;
+        ListNode() {{}}
+        ListNode(int val) {{ this.val = val; }}
+        ListNode(int val, ListNode next) {{ this.val = val; this.next = next; }}
+        
+        public static ListNode fromArray(int[] arr) {{
+            if (arr == null || arr.length == 0) return null;
+            ListNode head = new ListNode(arr[0]);
+            ListNode current = head;
+            for (int i = 1; i < arr.length; i++) {{
+                current.next = new ListNode(arr[i]);
+                current = current.next;
+            }}
+            return head;
+        }}
+        
+        public static int[] toArray(ListNode head) {{
+            if (head == null) return new int[0];
+            List<Integer> result = new ArrayList<>();
+            ListNode current = head;
+            while (current != null) {{
+                result.add(current.val);
+                current = current.next;
+            }}
+            int[] arr = new int[result.size()];
+            for (int i = 0; i < result.size(); i++) {{
+                arr[i] = result.get(i);
+            }}
+            return arr;
+        }}
+    }}
+
+    // Helper class for tree problems
+    public static class TreeNode {{
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {{}}
+        TreeNode(int val) {{ this.val = val; }}
+        TreeNode(int val, TreeNode left, TreeNode right) {{
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }}
+    }}
+
+    // Helper class for graph problems
+    public static class Node {{
+        int val;
+        List<Node> neighbors;
+        Node() {{ this.neighbors = new ArrayList<>(); }}
+        Node(int _val) {{
+            val = _val;
+            neighbors = new ArrayList<>();
+        }}
+        Node(int _val, ArrayList<Node> _neighbors) {{
+            val = _val;
+            neighbors = _neighbors;
+        }}
+    }}
+
+    public static void main(String[] args) {{
+{code}
+    }}
+}}
+"""
+
+
+def wrap_java_test_code(code, test_input, test_output):
+    """
+    Wrap Java Solution code with test harness for LeetCode-style execution.
+    Attempts to automatically detect and call the main solution method.
+    
+    Args:
+        code (str): Java Solution class code
+        test_input (str): Test input in array format, e.g., "[1,2,3]" or "[1,2,3]\n[4,5,6]"
+        test_output (str): Expected output format for verification
+        
+    Returns:
+        str: Complete Java code with test harness
+    """
+    code = code.strip()
+    
+    # Common Java imports
+    common_imports = """import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.math.*;
+"""
+    
+    # For LeetCode-style problems, generate test code that:
+    # 1. Parses array inputs
+    # 2. Creates ListNode/TreeNode structures
+    # 3. Calls the solution method
+    # 4. Returns formatted result
+    
+    # Detect if input contains two arrays (e.g., mergeTwoLists takes 2 arrays)
+    input_lines = test_input.strip().split('\n')
+    array_count = len(input_lines)
+    
+    test_harness = """
+    // Helper method to parse array input
+    static int[] parseArray(String input) {
+        if (input == null || input.trim().isEmpty()) return new int[0];
+        input = input.trim().replaceAll("[\\\\[\\\\]\\\\s]", "");
+        if (input.isEmpty()) return new int[0];
+        String[] parts = input.split(",");
+        int[] result = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            result[i] = Integer.parseInt(parts[i].trim());
+        }
+        return result;
+    }
+    
+    // Helper to convert ListNode to array for output
+    static int[] linkedListToArray(ListNode head) {
+        if (head == null) return new int[0];
+        List<Integer> result = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        int[] arr = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            arr[i] = result.get(i);
+        }
+        return arr;
+    }
+    
+    // Helper to format array output
+    static String formatArray(int[] arr) {
+        if (arr == null || arr.length == 0) return "[]";
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < arr.length; i++) {
+            if (i > 0) sb.append(",");
+            sb.append(arr[i]);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+    
+    // Main test method
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        try {
+            // Parse input
+"""
+    
+    # Generate code based on number of input arrays
+    if array_count >= 2:
+        test_harness += f"""
+            int[] arr1 = parseArray("{input_lines[0]}");
+            int[] arr2 = parseArray("{input_lines[1]}");
+            ListNode list1 = ListNode.fromArray(arr1);
+            ListNode list2 = ListNode.fromArray(arr2);
+            
+            // Call mergeTwoLists
+            ListNode result = solution.mergeTwoLists(list1, list2);
+            int[] resultArr = linkedListToArray(result);
+            System.out.println(formatArray(resultArr));
+"""
+    else:
+        test_harness += f"""
+            int[] arr1 = parseArray("{input_lines[0]}");
+            ListNode head = ListNode.fromArray(arr1);
+            
+            // Try to call methods on the solution
+            // This is a generic approach that works for many LeetCode problems
+            java.lang.reflect.Method[] methods = Solution.class.getDeclaredMethods();
+            if (methods.length > 0) {{
+                java.lang.reflect.Method method = methods[0];
+                try {{
+                    Object result = method.invoke(solution, head);
+                    if (result instanceof ListNode) {{
+                        int[] resultArr = linkedListToArray((ListNode) result);
+                        System.out.println(formatArray(resultArr));
+                    }} else {{
+                        System.out.println(result);
+                    }}
+                }} catch (Exception e) {{
+                    System.out.println("Error calling method: " + e.getMessage());
+                }}
+            }}
+"""
+    
+    test_harness += """
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+"""
+    
+    # Remove 'public' from class declarations and make it static
+    import re
+    code = re.sub(r'\bpublic\s+class\s+', 'static class ', code)
+    # Also handle case where user just has 'class' without public
+    if not code.startswith('static'):
+        code = code.replace('class Solution', 'static class Solution')
+    
+    # Build complete code
+    return f"""{common_imports}
+
+public class Main {{
+    // Helper class for linked list problems
+    public static class ListNode {{
+        int val;
+        ListNode next;
+        ListNode() {{}}
+        ListNode(int val) {{ this.val = val; }}
+        ListNode(int val, ListNode next) {{ this.val = val; this.next = next; }}
+        
+        public static ListNode fromArray(int[] arr) {{
+            if (arr == null || arr.length == 0) return null;
+            ListNode head = new ListNode(arr[0]);
+            ListNode current = head;
+            for (int i = 1; i < arr.length; i++) {{
+                current.next = new ListNode(arr[i]);
+                current = current.next;
+            }}
+            return head;
+        }}
+    }}
+
+    // Helper class for tree problems
+    public static class TreeNode {{
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {{}}
+        TreeNode(int val) {{ this.val = val; }}
+        TreeNode(int val, TreeNode left, TreeNode right) {{
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }}
+    }}
+
+    // Helper class for graph problems
+    public static class Node {{
+        int val;
+        List<Node> neighbors;
+        Node() {{ this.neighbors = new ArrayList<>(); }}
+        Node(int _val) {{
+            val = _val;
+            neighbors = new ArrayList<>();
+        }}
+    }}
+
+    // User's solution class
+    {code}
+
+    {test_harness}
+}}
+"""
+    """
+    Wrap Java code with imports and main method (LeetCode-style).
+    Automatically adds common Java imports and helper classes so users don't need to.
+    
+    Args:
+        code (str): Java source code
+        
+    Returns:
+        str: Wrapped Java code ready to execute with imports and helper classes
+    """
+    code = code.strip()
+    
+    # Common Java imports (LeetCode-style)
+    common_imports = """import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.math.*;
+"""
+    
+    # Check if code already has imports
+    has_imports = code.startswith('import ')
+    
+    # Check if code already has a main method
+    if 'static void main' in code or 'public static void main' in code:
+        # Code already has main, return as-is (user wrote complete code)
+        return code
+    
+    # Remove 'public' from any class declaration (can't have multiple public classes)
+    # Java requires public class name to match filename
+    import re
+    code = re.sub(r'\bpublic\s+class\s+', 'class ', code)
+    
+    # Pattern 1: User has a class (LeetCode style - just Solution class)
+    # Put Solution class INSIDE Main class so it can access inner helper classes
+    if 'class ' in code:
+        return f"""{common_imports}
+
+public class Main {{
+    // Helper class for linked list problems
+    public static class ListNode {{
+        int val;
+        ListNode next;
+        ListNode() {{}}
+        ListNode(int val) {{ this.val = val; }}
+        ListNode(int val, ListNode next) {{ this.val = val; this.next = next; }}
+        
+        // Convert array to ListNode
+        public static ListNode fromArray(int[] arr) {{
+            if (arr == null || arr.length == 0) return null;
+            ListNode head = new ListNode(arr[0]);
+            ListNode current = head;
+            for (int i = 1; i < arr.length; i++) {{
+                current.next = new ListNode(arr[i]);
+                current = current.next;
+            }}
+            return head;
+        }}
+        
+        // Convert ListNode to array
+        public static int[] toArray(ListNode head) {{
+            if (head == null) return new int[0];
+            List<Integer> result = new ArrayList<>();
+            ListNode current = head;
+            while (current != null) {{
+                result.add(current.val);
+                current = current.next;
+            }}
+            int[] arr = new int[result.size()];
+            for (int i = 0; i < result.size(); i++) {{
+                arr[i] = result.get(i);
+            }}
+            return arr;
+        }}
+    }}
+
+    // Helper class for tree problems
+    public static class TreeNode {{
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {{}}
+        TreeNode(int val) {{ this.val = val; }}
+        TreeNode(int val, TreeNode left, TreeNode right) {{
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }}
+    }}
+
+    // Helper class for graph problems
+    public static class Node {{
+        int val;
+        List<Node> neighbors;
+        Node() {{ this.neighbors = new ArrayList<>(); }}
+        Node(int _val) {{
+            val = _val;
+            neighbors = new ArrayList<>();
+        }}
+        Node(int _val, ArrayList<Node> _neighbors) {{
+            val = _val;
+            neighbors = _neighbors;
+        }}
+    }}
+
+    // Utility class for test input parsing
+    public static class TestHelper {{
+        public static int[] parseIntArray(String input) {{
+            if (input == null || input.trim().isEmpty()) return new int[0];
+            input = input.trim().replaceAll("[\\[\\]\\s]", "");
+            if (input.isEmpty()) return new int[0];
+            String[] parts = input.split(",");
+            int[] result = new int[parts.length];
+            for (int i = 0; i < parts.length; i++) {{
+                result[i] = Integer.parseInt(parts[i].trim());
+            }}
+            return result;
+        }}
+        
+        public static String formatArray(int[] arr) {{
+            if (arr == null || arr.length == 0) return "[]";
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < arr.length; i++) {{
+                if (i > 0) sb.append(",");
+                sb.append(arr[i]);
+            }}
+            sb.append("]");
+            return sb.toString();
+        }}
+    }}
+
+    // User's solution class
+    {code}
+
+    public static void main(String[] args) {{
+        System.out.println("Code compiled successfully!");
+    }}
+}}
+"""
+    
+    # Pattern 2: User wrote just code statements (no class)
+    # Wrap in Main class with imports and helper classes
+    return f"""{common_imports}
+
+public class Main {{
+    // Helper class for linked list problems
+    public static class ListNode {{
+        int val;
+        ListNode next;
+        ListNode() {{}}
+        ListNode(int val) {{ this.val = val; }}
+        ListNode(int val, ListNode next) {{ this.val = val; this.next = next; }}
+    }}
+
+    // Helper class for tree problems
+    public static class TreeNode {{
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {{}}
+        TreeNode(int val) {{ this.val = val; }}
+        TreeNode(int val, TreeNode left, TreeNode right) {{
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }}
+    }}
+
+    // Helper class for graph problems
+    public static class Node {{
+        int val;
+        List<Node> neighbors;
+        Node() {{ this.neighbors = new ArrayList<>(); }}
+        Node(int _val) {{
+            val = _val;
+            neighbors = new ArrayList<>();
+        }}
+        Node(int _val, ArrayList<Node> _neighbors) {{
+            val = _val;
+            neighbors = _neighbors;
+        }}
+    }}
+
     public static void main(String[] args) {{
 {code}
     }}
@@ -571,8 +1078,13 @@ def run_test_cases(language, code, test_cases):
         expected_output = normalize_output(test_case.get('output', ''))
         explanation = test_case.get('explanation', '')
         
-        # Execute code with this test case's input
-        execution_result = execute_code(language, code, test_input)
+        # For Java, use special test harness that parses input and calls methods
+        if language.upper() == 'JAVA':
+            test_code = wrap_java_test_code(code, test_input, expected_output)
+            execution_result = execute_code(language, test_code, '')
+        else:
+            # For other languages, pass input as stdin
+            execution_result = execute_code(language, code, test_input)
         
         # Check for compilation or runtime errors
         if execution_result.get('compile_output'):
