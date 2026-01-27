@@ -2,12 +2,6 @@
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "framework": "vite",
-    "devCommand": "vite",
-    "env": {
-        "VITE_API_URL": {
-            "description": "Backend API URL"
-        }
-    },
     "cleanUrls": true,
     "trailingSlash": false,
     "headers": [
